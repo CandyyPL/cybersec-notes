@@ -127,19 +127,19 @@ $ curl -k https://inlanefreight.com
 
 Let's start by examining the following example HTTP request:
 
-`
-GET /users/login.html HTTP/1.1  
-Host: inlanefreight.com  
-User-Agent: Mozilla/5.0 (Ubuntu; Linux x86_64;) Firefox/78.0  
-Accept: text/html,application/xhtml+xml,application/xml  
-Accept-Language: en-US,en;q=0.5  
-Accept-Encoding: gzip, deflate  
-Content-Type: text/html; charset=UTF-8  
-Connection: close  
-Cookie: PHPSESSID=c4ggt4jull9obt7aupa55o8vbf  
-Upgrade-Insecure-Requests: 1  
-Cache-Control: max-age=0  
-`
+```bash
+GET /users/login.html HTTP/1.1
+Host: inlanefreight.com 
+User-Agent: Mozilla/5.0 (Ubuntu; Linux x86_64;) Firefox/78.0
+Accept: text/html,application/xhtml+xml,application/xml 
+Accept-Language: en-US,en;q=0.5 
+Accept-Encoding: gzip, deflate
+Content-Type: text/html; charset=UTF-8
+Connection: close
+Cookie: PHPSESSID=c4ggt4jull9obt7aupa55o8vbf
+Upgrade-Insecure-Requests: 1
+Cache-Control: max-age=0
+```
 
 The image above shows an HTTP GET request to the URL: `http://inlanefreight.com/users/login.html`
 
