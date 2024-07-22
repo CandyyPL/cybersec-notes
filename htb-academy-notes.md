@@ -70,6 +70,24 @@ $ curl -s -O inlanefreight.com
 
 One of the significant drawbacks of HTTP is that all data is transferred in clear-text. To counter this issue, the HTTPS (HTTP Secure) protocol was created, in which all communications are transferred in an encrypted format, so even if a third party does intercept the request, they would not be able to extract the data out of it.
 
+### HTTPS Flow
+
+```mermaid
+sequenceDiagram
+    User ->> Browser: Go to inlanefreight.com
+
+    Browser ->> Server: HTTP Request to inlanefreight.com:80
+    Server ->> Browser: Redirect to HTTPS (https://inlanefreight.com)
+    Browser ->> Server: Connect to inlanefreight.com:443 (Client Hello)
+    Server ->> Browser: Server Hello + Server Key Exchange
+    Browser ->> Server: Client Key Exchange (Encrypted Handshake)
+    Server ->> Browser: Encrypted Handshake (Finished)
+
+    Note over Browser,Server: Encrypted HTTP Communication
+
+    Browser ->> User: index.html
+```
+
 ### DNS note
 
 Although the data transferred through the HTTPS protocol may be encrypted, the request may still reveal the visited URL if it contacted a clear-text DNS server. For this reason, it is recommended to utilize encrypted DNS servers (e.g. 8.8.8.8 or 1.1.1.1), or utilize a VPN service to ensure all traffic is properly encrypted.
