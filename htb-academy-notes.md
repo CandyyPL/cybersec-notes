@@ -28,15 +28,18 @@ Resources over HTTP are accessed via a URL, which offers many more specification
 ### HTTP Flow
 
 ```mermaid
-flowchart LR
-    u["`User`"] -- "`Go to inlanefreight.com`" --> b["`Browser
-    http://inlanefreight.com
-    index.html`"]
-    b -- "`Where is inlanefreight.com?`" --> dns
-    dns["`DNS Server`"] -- "`152.153.84.14`" --> b
-    b -- "`HTTP Request to 152.153.84.14:80`" --> ws["`InlaneFreight
-    Web Server`"]
-    ws -- "`HTTP Response from inlanefreight.com`" --> b
+sequenceDiagram
+  participant u as User
+  participant b as Browser
+  participant ds as DNS Server
+  participant ws as Web Server
+
+  u ->> b: Go to inlanefreight.com
+  b ->> ds: Where is inlanefreight.com?
+  ds ->> b: 152.153.81.14
+  b ->> ws: HTTP Request to 152.153.81.14:80
+  ws ->> b: HTTP Response from inlanefreight.com
+  b ->> u: index.html
 ```
 
 ### /etc/hosts file
