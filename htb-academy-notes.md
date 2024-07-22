@@ -1,11 +1,12 @@
 # HackTheBox Academy Notes
 
 ## Table of Contents
-- [Web Requests](#web_requests)
-    - [HTTP](#web_requests_http)
-    - [HTTPS](#web_requests_https)
-    - [HTTP Request](#web_requests_http_request)
-    - [HTTP Response](#web_request_http_response)
+- [HTTP Fundamentals](#http_fundamentals)
+    - [Web Requests](#web_requests)
+        - [HTTP](#web_requests_http)
+        - [HTTPS](#web_requests_https)
+        - [HTTP Request](#web_requests_http_request)
+        - [HTTP Response](#web_request_http_response)
 
 ## Web Requests <a name='web_requests' />
 
@@ -190,7 +191,7 @@ Finally, the response may end with a response body, which is separated by a new 
 
 ### cURL
 
-In our earlier examples with cURL, we only specified the URL and got the response body in return. However, cURL also allows us to preview the full HTTP request and the full HTTP response, which can become very handy when performing web penetration tests or writing exploits. To view the full HTTP request and response, we can simply add the -v verbose flag to our earlier commands, and it should print both the request and response:
+In our earlier examples with cURL, we only specified the URL and got the response body in return. However, cURL also allows us to preview the full HTTP request and the full HTTP response, which can become very handy when performing web penetration tests or writing exploits. To view the full HTTP request and response, we can simply add the **-v** verbose flag to our earlier commands, and it should print both the request and response:
 
 ```bash
 $ curl inlanefreight.com -v
@@ -218,5 +219,5 @@ $ curl inlanefreight.com -v
 ...SNIP...
 ```
 
-As we can see, this time, we get the full HTTP request and response. The request simply sent GET / HTTP/1.1 along with the Host, User-Agent and Accept headers. In return, the HTTP response contained the HTTP/1.1 401 Unauthorized, which indicates that we do not have access over the requested resource, as we will see in an upcoming section. Similar to the request, the response also contained several headers sent by the server, including Date, Content-Length, and Content-Type. Finally, the response contained the response body in HTML, which is the same one we received earlier when using cURL without the -v flag.
+As we can see, this time, we get the full HTTP request and response. The request simply sent **GET / HTTP/1.1** along with the **Host**, **User-Agent** and **Accept** headers. In return, the HTTP response contained the **HTTP/1.1 401 Unauthorized**, which indicates that we do not have access over the requested resource, as we will see in an upcoming section. Similar to the request, the response also contained several headers sent by the server, including **Date**, **Content-Length**, and **Content-Type**. Finally, the response contained the response body in HTML, which is the same one we received earlier when using cURL without the **-v** flag.
 
