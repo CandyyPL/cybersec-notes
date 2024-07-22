@@ -1,11 +1,13 @@
 # HackTheBox Academy Notes
 
 ## Table of Contents
-1. [Web Requests](#web_requests)
+- [Web Requests](#web_requests)
+    - [HTTP](#web_requests_http)
+    - [HTTPS](#web_requests_https)
 
 ## Web Requests <a name='web_requests' />
 
-### HTTP
+### HTTP <a name='web_requests_http' />
 
 HTTP communication consists of a client and a server, where the client requests the server for a resource. The server processes the requests and returns the requested resource. The default port for HTTP communication is port 80, though this can be changed to any other port, depending on the web server configuration. The same requests are utilized when we use the internet to visit different websites. We enter a **Fully Qualified Domain Name (FQDN)** as a **Uniform Resource Locator (URL)** to reach the desired website, like www.hackthebox.com.
 
@@ -57,21 +59,25 @@ $ curl inlanefreight.com
 
 We see that cURL does not render the HTML/JavaScript/CSS code, unlike a web browser, but prints it in its raw format. However, as penetration testers, we are mainly interested in the request and response context, which usually becomes much faster and more convenient than a web browser.
 
-We may also use cURL to download a page or a file and output the content into a file using the -O flag. If we want to specify the output file name, we can use the -o flag and specify the name. Otherwise, we can use -O and cURL will use the remote file name, as follows:
+We may also use cURL to download a page or a file and output the content into a file using the -O flag. If we want to specify the output file name, we can use the **-o** flag and specify the name. Otherwise, we can use **-O** and cURL will use the remote file name, as follows:
 ```bash
 $ curl -O inlanefreight.com
 $ ls
 index.html
 ```
 
-As we can see, the output was not printed this time but rather saved into index.html. We noticed that cURL still printed some status while processing the request. We can silent the status with the -s flag, as follows:
+As we can see, the output was not printed this time but rather saved into index.html. We noticed that cURL still printed some status while processing the request. We can silent the status with the **-s** flag, as follows:
 ```bash
 $ curl -s -O inlanefreight.com
 ```
 
-### HTTPS
+### HTTPS <a name='web_requests_https' />
 
 One of the significant drawbacks of HTTP is that all data is transferred in clear-text. To counter this issue, the HTTPS (HTTP Secure) protocol was created, in which all communications are transferred in an encrypted format, so even if a third party does intercept the request, they would not be able to extract the data out of it.
+
+### DNS note
+
+Although the data transferred through the HTTPS protocol may be encrypted, the request may still reveal the visited URL if it contacted a clear-text DNS server. For this reason, it is recommended to utilize encrypted DNS servers (e.g. 8.8.8.8 or 1.1.1.1), or utilize a VPN service to ensure all traffic is properly encrypted.
 
 ### HTTPS Flow
 
@@ -91,7 +97,64 @@ sequenceDiagram
     Browser ->> User: index.html
 ```
 
-### DNS note
+If we type **http://** instead of **https://** to visit a website that enforces HTTPS, the browser attempts to resolve the domain and redirects the user to the webserver hosting the target website. A request is sent to port **80** first, which is the unencrypted HTTP protocol. The server detects this and redirects the client to secure HTTPS port **443** instead. This is done via the **301 Moved Permanently** response code, which we will discuss in an upcoming section.
 
-Although the data transferred through the HTTPS protocol may be encrypted, the request may still reveal the visited URL if it contacted a clear-text DNS server. For this reason, it is recommended to utilize encrypted DNS servers (e.g. 8.8.8.8 or 1.1.1.1), or utilize a VPN service to ensure all traffic is properly encrypted.
+Depending on the circumstances, an attacker may be able to perform an HTTP downgrade attack, which downgrades HTTPS communication to HTTP, making the data transferred in clear-text. This is done by setting up a Man-In-The-Middle (MITM) proxy to transfer all traffic through the attacker's host without the user's knowledge.
+
+### cURL for HTTPS
+
+cURL should automatically handle all HTTPS communication standards and perform a secure handshake and then encrypt and decrypt data automatically. However, if we ever contact a website with an invalid SSL certificate or an outdated one, then cURL by default would not proceed with the communication to protect against the earlier mentioned MITM attacks:
+
+```bash
+$ curl https://inlanefreight.com
+
+curl: (60) SSL certificate problem: Invalid certificate chain
+More details here: https://curl.haxx.se/docs/sslcerts.html
+...SNIP...
+```
+
+We may face such an issue when testing a local web application or with a web application hosted for practice purposes, as such web applications may not yet have implemented a valid SSL certificate. To skip the certificate check with cURL, we can use the -k flag:
+
+```bash
+$ curl -k https://inlanefreight.com
+
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+...SNIP...
+```
+
+### HTTP Request <a name='web_requests_http_request' />
+
+Let's start by examining the following example HTTP request:
+
+`
+GET /users/login.html HTTP/1.1
+Host: inlanefreight.com
+User-Agent: Mozilla/5.0 (Ubuntu; Linux x86_64;) Firefox/78.0
+Accept: text/html,application/xhtml+xml,application/xml
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: text/html; charset=UTF-8
+Connection: close
+Cookie: PHPSESSID=c4ggt4jull9obt7aupa55o8vbf
+Upgrade-Insecure-Requests: 1
+Cache-Control: max-age=0
+`
+
+The image above shows an HTTP GET request to the URL: `http://inlanefreight.com/users/login.html`
+
+
+The first line of any HTTP request contains three main fields 'separated by spaces':
+
+| Field | Example | Description |
+| Method | GET | The HTTP method or verb, which specifies the type of action to perform. |
+| Path | /users/login.html | The path to the resource being accessed. This field can also be suffixed with a query string (e.g. **?username=user**). |
+| Version | HTTP/1.1 | The third and final field is used to denote the HTTP version. |
+
+The next set of lines contain HTTP header value pairs, like Host, User-Agent, Cookie, and many other possible headers. These headers are used to specify various attributes of a request. The headers are terminated with a new line, which is necessary for the server to validate the request. Finally, a request may end with the request body and data.
+
+HTTP version 1.X sends requests as clear-text, and uses a new-line character to separate different fields and different requests. HTTP version 2.X, on the other hand, sends requests as binary data in a dictionary form.
+
+### HTTP Response <a name='web_requests_http_response' />
+
 
