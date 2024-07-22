@@ -10,11 +10,11 @@ Resources over HTTP are accessed via a URL, which offers many more specification
 
 `http://admin:password@inlanefreight.com:80/dashboard.php?login=true#status`
 
-`http` - *scheme*
-`admin:password` - *user*
-`inlanefreight.com` - *host*
-`80` - *port*
-`dashboard.php` - *path*
-`login=true` - *query string*
-`status` - *fragment*
+`http` - **scheme** <br />
+`admin:password` - **user** <br />
+`inlanefreight.com` - **host** <br />
+`80` - **port** <br />
+`dashboard.php` - **path** <br />
+`login=true` - **query string** <br />
+`status` - **fragment** <br />
 
