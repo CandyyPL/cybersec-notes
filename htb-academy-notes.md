@@ -8,9 +8,13 @@ HTTP communication consists of a client and a server, where the client requests 
 
 Resources over HTTP are accessed via a URL, which offers many more specifications than simply specifying a website we want to visit. Let's look at the structure of a URL:
 
-`            user                        port             query string       `
-`        --------------                   --               ----------        `
-` http://admin:password@inlanefreight.com:80/dashboard.php/login=true#status `
-` ----                  -----------------    -------------            ------ `
-`scheme                       host               path                fragment`
+`http://admin:password@inlanefreight.com:80/dashboard.php?login=true#status`
+
+`http` - *scheme*
+`admin:password` - *user*
+`inlanefreight.com` - *host*
+`80` - *port*
+`dashboard.php` - *path*
+`login=true` - *query string*
+`status` - *fragment*
 
