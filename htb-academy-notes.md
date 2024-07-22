@@ -5,6 +5,8 @@
 
 ## Web Requests <a name='web_requests' />
 
+### HTTP
+
 HTTP communication consists of a client and a server, where the client requests the server for a resource. The server processes the requests and returns the requested resource. The default port for HTTP communication is port 80, though this can be changed to any other port, depending on the web server configuration. The same requests are utilized when we use the internet to visit different websites. We enter a **Fully Qualified Domain Name (FQDN)** as a **Uniform Resource Locator (URL)** to reach the desired website, like www.hackthebox.com.
 
 ### URL
@@ -22,6 +24,20 @@ Resources over HTTP are accessed via a URL, which offers many more specification
 | Path | `/dashboard.php` | This points to the resource being accessed, which can be a file or a folder. If there is no path specified, the server returns the default index (e.g. index.html). |
 | Query String | `?login=true` | The query string starts with a question mark **(?)**, and consists of a parameter (e.g. login) and a value (e.g. true). Multiple parameters can be separated by an ampersand **(&)**. |
 | Fragment | `#status` | Fragments are processed by the browsers on the client-side to locate sections within the primary resource (e.g. a header or section on the page). |
+
+### HTTP Flow
+
+```mermaid
+flowchart LR
+    u["`User`"] -- "`Go to inlanefreight.com`" --> b["`Browser
+    http://inlanefreight.com
+    index.html`"]
+    b -- "`Where is inlanefreight.com?`" --> dns
+    dns["`DNS Server`"] -- "`152.153.84.14`" --> b
+    b -- "`HTTP Request to 152.153.84.14:80`" --> ws["`InlaneFreight
+    Web Server`"]
+    ws -- "`HTTP Response from inlanefreight.com`" --> b
+```
 
 ### /etc/hosts file
 
@@ -49,4 +65,12 @@ As we can see, the output was not printed this time but rather saved into index.
 ```bash
 $ curl -s -O inlanefreight.com
 ```
+
+### HTTPS
+
+One of the significant drawbacks of HTTP is that all data is transferred in clear-text. To counter this issue, the HTTPS (HTTP Secure) protocol was created, in which all communications are transferred in an encrypted format, so even if a third party does intercept the request, they would not be able to extract the data out of it.
+
+### DNS note
+
+Although the data transferred through the HTTPS protocol may be encrypted, the request may still reveal the visited URL if it contacted a clear-text DNS server. For this reason, it is recommended to utilize encrypted DNS servers (e.g. 8.8.8.8 or 1.1.1.1), or utilize a VPN service to ensure all traffic is properly encrypted.
 
