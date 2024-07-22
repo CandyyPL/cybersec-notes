@@ -4,6 +4,8 @@
 - [Web Requests](#web_requests)
     - [HTTP](#web_requests_http)
     - [HTTPS](#web_requests_https)
+    - [HTTP Request](#web_requests_http_request)
+    - [HTTP Response](#web_request_http_response)
 
 ## Web Requests <a name='web_requests' />
 
@@ -157,4 +159,64 @@ The next set of lines contain HTTP header value pairs, like Host, User-Agent, Co
 HTTP version 1.X sends requests as clear-text, and uses a new-line character to separate different fields and different requests. HTTP version 2.X, on the other hand, sends requests as binary data in a dictionary form.
 
 ### HTTP Response <a name='web_requests_http_response' />
+
+Once the server processes our request, it sends its response. The following is an example HTTP response:
+
+```bash
+HTTP/1.1 200 OK
+Date: Mon, 13 Jul 2020 10:46:21 GMT
+Server: Apache/2.4.41 (Ubuntu)
+Set-Cookie: PHPSESSID=m4u64rq1pfthrvvb12ai9voqqf; path=/
+Expires: Thu, 19 Nov 1981 08:52:00 GMT
+Cache-Control: no-store, no-cache, must-revalidate
+Pragma: no-cache
+Vary: Accept-Encoding
+Content-Length: 964
+Connection: close
+Content-Type: text/html; charset=UTF-8
+
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Inlane Freight</title>
+        <link href="./style.css" rel="stylesheet">
+    </head>
+    ........
+```
+
+The first line of an HTTP response contains two fields separated by spaces. The first being the **HTTP version** (e.g. **HTTP/1.1**), and the second denotes the **HTTP response code** (e.g. **200 OK**).
+
+Finally, the response may end with a response body, which is separated by a new line after the headers. The response body is usually defined as HTML code. However, it can also respond with other code types such as JSON, website resources such as images, style sheets or scripts, or even a document such as a PDF document hosted on the webserver.
+
+### cURL
+
+In our earlier examples with cURL, we only specified the URL and got the response body in return. However, cURL also allows us to preview the full HTTP request and the full HTTP response, which can become very handy when performing web penetration tests or writing exploits. To view the full HTTP request and response, we can simply add the -v verbose flag to our earlier commands, and it should print both the request and response:
+
+```bash
+$ curl inlanefreight.com -v
+
+*   Trying SERVER_IP:80...
+* TCP_NODELAY set
+* Connected to inlanefreight.com (SERVER_IP) port 80 (#0)
+> GET / HTTP/1.1
+> Host: inlanefreight.com
+> User-Agent: curl/7.65.3
+> Accept: */*
+> Connection: close
+> 
+* Mark bundle as not supporting multiuse
+< HTTP/1.1 401 Unauthorized
+< Date: Tue, 21 Jul 2020 05:20:15 GMT
+< Server: Apache/X.Y.ZZ (Ubuntu)
+< WWW-Authenticate: Basic realm="Restricted Content"
+< Content-Length: 464
+< Content-Type: text/html; charset=iso-8859-1
+< 
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<html><head>
+
+...SNIP...
+```
+
+As we can see, this time, we get the full HTTP request and response. The request simply sent GET / HTTP/1.1 along with the Host, User-Agent and Accept headers. In return, the HTTP response contained the HTTP/1.1 401 Unauthorized, which indicates that we do not have access over the requested resource, as we will see in an upcoming section. Similar to the request, the response also contained several headers sent by the server, including Date, Content-Length, and Content-Type. Finally, the response contained the response body in HTML, which is the same one we received earlier when using cURL without the -v flag.
 
