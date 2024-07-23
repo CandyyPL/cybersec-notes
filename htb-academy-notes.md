@@ -12,7 +12,9 @@
 
 ### HTTP <a name='web_requests_http' />
 
-HTTP communication consists of a client and a server, where the client requests the server for a resource. The server processes the requests and returns the requested resource. The default port for HTTP communication is port 80, though this can be changed to any other port, depending on the web server configuration. The same requests are utilized when we use the internet to visit different websites. We enter a **Fully Qualified Domain Name (FQDN)** as a **Uniform Resource Locator (URL)** to reach the desired website, like www.hackthebox.com.
+**FQDN** - Fully Qualified Domain Name
+**URL** - Uniform Resource Locator
+**HTTP port** - 80
 
 ### URL
 
@@ -53,30 +55,28 @@ Our browsers usually first look up records in the local **`/etc/hosts`** file, a
 
 ### cURL
 
-cURL (client URL) is a command-line tool and library that primarily supports HTTP along with many other protocols. This makes it a good candidate for scripts as well as automation, making it essential for sending various types of web requests from the command line, which is necessary for many types of web penetration tests.
+cURL (client URL) is a command-line tool and library that primarily supports HTTP along with many other protocols.
 
 We can send a basic HTTP request to any URL by using it as an argument for cURL, as follows:
 ```bash
 $ curl inlanefreight.com
 ```
 
-We see that cURL does not render the HTML/JavaScript/CSS code, unlike a web browser, but prints it in its raw format. However, as penetration testers, we are mainly interested in the request and response context, which usually becomes much faster and more convenient than a web browser.
-
-We may also use cURL to download a page or a file and output the content into a file using the -O flag. If we want to specify the output file name, we can use the **-o** flag and specify the name. Otherwise, we can use **-O** and cURL will use the remote file name, as follows:
+Downloading file with curl (**-o flag):
 ```bash
 $ curl -O inlanefreight.com
 $ ls
 index.html
 ```
 
-As we can see, the output was not printed this time but rather saved into index.html. We noticed that cURL still printed some status while processing the request. We can silent the status with the **-s** flag, as follows:
+We can silent the status with the **-s** flag, as follows:
 ```bash
 $ curl -s -O inlanefreight.com
 ```
 
 ### HTTPS <a name='web_requests_https' />
 
-One of the significant drawbacks of HTTP is that all data is transferred in clear-text. To counter this issue, the HTTPS (HTTP Secure) protocol was created, in which all communications are transferred in an encrypted format, so even if a third party does intercept the request, they would not be able to extract the data out of it.
+**HTTPS port** - 443
 
 ### DNS note
 
@@ -99,8 +99,6 @@ sequenceDiagram
 
     Browser ->> User: index.html
 ```
-
-If we type **http://** instead of **https://** to visit a website that enforces HTTPS, the browser attempts to resolve the domain and redirects the user to the webserver hosting the target website. A request is sent to port **80** first, which is the unencrypted HTTP protocol. The server detects this and redirects the client to secure HTTPS port **443** instead. This is done via the **301 Moved Permanently** response code, which we will discuss in an upcoming section.
 
 Depending on the circumstances, an attacker may be able to perform an HTTP downgrade attack, which downgrades HTTPS communication to HTTP, making the data transferred in clear-text. This is done by setting up a Man-In-The-Middle (MITM) proxy to transfer all traffic through the attacker's host without the user's knowledge.
 
@@ -155,8 +153,6 @@ The first line of any HTTP request contains three main fields 'separated by spac
 | Path | /users/login.html | The path to the resource being accessed. This field can also be suffixed with a query string (e.g. **?username=user**). |
 | Version | HTTP/1.1 | The third and final field is used to denote the HTTP version. |
 
-The next set of lines contain HTTP header value pairs, like Host, User-Agent, Cookie, and many other possible headers. These headers are used to specify various attributes of a request. The headers are terminated with a new line, which is necessary for the server to validate the request. Finally, a request may end with the request body and data.
-
 HTTP version 1.X sends requests as clear-text, and uses a new-line character to separate different fields and different requests. HTTP version 2.X, on the other hand, sends requests as binary data in a dictionary form.
 
 ### HTTP Response <a name='web_requests_http_response' />
@@ -187,12 +183,9 @@ Content-Type: text/html; charset=UTF-8
 
 The first line of an HTTP response contains two fields separated by spaces. The first being the **HTTP version** (e.g. **HTTP/1.1**), and the second denotes the **HTTP response code** (e.g. **200 OK**).
 
-Finally, the response may end with a response body, which is separated by a new line after the headers. The response body is usually defined as HTML code. However, it can also respond with other code types such as JSON, website resources such as images, style sheets or scripts, or even a document such as a PDF document hosted on the webserver.
-
 ### cURL
 
-In our earlier examples with cURL, we only specified the URL and got the response body in return. However, cURL also allows us to preview the full HTTP request and the full HTTP response, which can become very handy when performing web penetration tests or writing exploits. To view the full HTTP request and response, we can simply add the **-v** verbose flag to our earlier commands, and it should print both the request and response:
-
+**-v** flag can be specified to print both request and response:
 ```bash
 $ curl inlanefreight.com -v
 
@@ -218,6 +211,4 @@ $ curl inlanefreight.com -v
 
 ...SNIP...
 ```
-
-As we can see, this time, we get the full HTTP request and response. The request simply sent **GET / HTTP/1.1** along with the **Host**, **User-Agent** and **Accept** headers. In return, the HTTP response contained the **HTTP/1.1 401 Unauthorized**, which indicates that we do not have access over the requested resource, as we will see in an upcoming section. Similar to the request, the response also contained several headers sent by the server, including **Date**, **Content-Length**, and **Content-Type**. Finally, the response contained the response body in HTML, which is the same one we received earlier when using cURL without the **-v** flag.
 
